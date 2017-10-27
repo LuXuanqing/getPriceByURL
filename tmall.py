@@ -1,5 +1,6 @@
 import urllib.request
 import json
+import re
 
 def getTmallPrice(url):
     # 检查url是否是字符串
@@ -8,17 +9,14 @@ def getTmallPrice(url):
         return None
 
     # 从url截取商品id
-    tempId = url.split('id=')[-1]
-    # id后面可能带有其它参数
-    if tempId.find('&') == -1:
-        id = tempId
+    regex = re.compile('[?&]id=(\d)+')
+    match = regex.search(url)
+    if match:
+        id = match.group().split('=')[-1]
+        print('id: {}'.format(id))
     else:
-        id = tempId.split('&')[0]
-    # 检验id是否为数字
-    if not id.isdigit():
-        print('无法获取正确的商品id，id={}'.format(id))
+        print('无法获取商品id')
         return None
-    print('id: {}'.format(id))
 
     # http请求的request headers
     headers = {"Referer": url}
@@ -32,6 +30,9 @@ def getTmallPrice(url):
     result = json.loads(html)
     price_info = result["defaultModel"]["itemPriceResultDO"]["priceInfo"]
     price = price_info["def"]["promotionList"][0]["price"]
-    print('id: {}, price: {}'.format(id, price))
+    print('price: {}'.format(price))
 
-getTmallPrice('https://chaoshi.detail.tmall.com/item.htm?spm=a220m.1000858.1000725.5.d81179771fpxr&id=536571819737')
+getTmallPrice('https://detail.tmall.com/item.htm?id=20757312104')
+getTmallPrice('https://detail.tmall.com/item.htm?spm=a1z10.3-b-s.w4011-15096307578.48.751595225uUB1Q&id=525167180958&rn=27a3c84555e1eda097271292eb27af13&abbucket=11')
+getTmallPrice('https://detail.tmall.com/item.htm?spm=a220o.1000855.0.da321h.621b1e40ug4X52&id=22354227999')
+getTmallPrice('https://chaoshi.detail.tmall.com/item.htm?spm=a220m.1000858.1000725.5.d81179771fpxr&id=536571819737&areaId=310100&user_id=725677994&cat_id=2&is_b=1&rn=81f6294d7e67f238244f5882f43c506f')
