@@ -4,7 +4,7 @@ import re
 
 def getTmallPrice(url):
     # 检查url是否是字符串
-    if not url.isalnum:
+    if not re.search('detail\.tmall\.com/(.*)[?&]id=(\d)+', url):
         print('商品的天猫url错误')
         return None
 
