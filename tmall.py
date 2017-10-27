@@ -28,9 +28,15 @@ def getTmallPrice(url):
     response = urllib.request.urlopen(request)
     html = response.read().decode('gbk')
     result = json.loads(html)
-    price_info = result["defaultModel"]["itemPriceResultDO"]["priceInfo"]
-    price = price_info["def"]["promotionList"][0]["price"]
-    print('price: {}'.format(price))
+    # print(type(result))
+    # print(result)
+    try:
+        price_info = result["defaultModel"]["itemPriceResultDO"]["priceInfo"]
+        price = price_info["def"]["promotionList"][0]["price"]
+        print('price: {}'.format(price))
+    except KeyError as e:
+        print(e,'获取失败，请稍后重试')
+    
 
 getTmallPrice('https://detail.tmall.com/item.htm?id=20757312104')
 getTmallPrice('https://detail.tmall.com/item.htm?spm=a1z10.3-b-s.w4011-15096307578.48.751595225uUB1Q&id=525167180958&rn=27a3c84555e1eda097271292eb27af13&abbucket=11')
