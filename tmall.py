@@ -21,7 +21,7 @@ def getTmallPrice(url):
     match = regex.search(url)
     if match:
         id = match.group().split('=')[-1]
-        print('tmall-id: {}'.format(id))
+        # print('tmall-id: {}'.format(id))
     else:
         print('无法获取商品id')
         return -2
@@ -53,7 +53,7 @@ def getTmallPrice(url):
                 price = price_info["def"]["price"]
             else:
                 price = price_info["def"]["promotionList"][0]["price"]
-            print('tmall-price: {}'.format(price))
+            # print('tmall-price: {}'.format(price))
             return float(price)
         except KeyError as e:
             if tries_now <= 3:

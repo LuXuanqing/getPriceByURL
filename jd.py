@@ -23,7 +23,7 @@ def getJdPrice(url):
     if match:
         match_str = match.group()
         id = re.search('\d+', match_str).group()
-        print('jd-id: {}'.format(id))
+        # print('jd-id: {}'.format(id))
     else:
         print('无法获取商品id')
         return -2
@@ -38,7 +38,7 @@ def getJdPrice(url):
     result = json.loads(jsonStr)
     # print(result)
     price = result[0]["p"]
-    print('jd-price: {}'.format(price))
+    # print('jd-price: {}'.format(price))
     return float(price)
 
 if __name__ == '__main__':
