@@ -1,5 +1,4 @@
 from openpyxl import load_workbook
-from openpyxl import Workbook
 from tmall import getTmallPrice
 from jd import getJdPrice
 import os.path
@@ -8,27 +7,60 @@ import time
 # 获取文件路径
 path = {}
 path['source'] = input('把表格拖进这个窗口，然后按下回车\npath: ')
+# 去除路径末尾的空格
 while path['source'].endswith(' '):
     path['source'] = path['source'][:-1]
 
 # 加载excel文件中的第一个sheet
 wb = load_workbook(path['source'])
 ws = wb.worksheets[0]
+# 统计总共多少行多少列
+nrows = ws.max_row
+ncols = ws.max_column
+# print('there are {} rows and {} columns'.format(nrows, ncols))
+
+# 获取第一行表头的所有字段
+fields = []
+for i in range(ncols):
+    fields.append(ws.cell(row=1,column=i+1).value)
+# print(fields)
+# 确定所需字段在第几列
+t_url_tag = '天猫网址'
+t_price_tag = '天猫价'
+jd_url_tag = '京东网址'
+jd_price_tag = '京东价'
+sku_tag = 'SKU'
+name_tag = '商品名称'
+t_url_index = fields.index(t_url_tag)
+t_price_index = fields.index(t_price_tag)
+jd_url_index = fields.index(jd_url_tag)
+jd_price_index = fields.index(jd_price_tag)
+sku_index = fields.index(sku_tag)
+name_index = fields.index(name_tag)
 
 # 商品计数
 items_counting = 1
-items_total = len(list(ws.rows)) - 1
+items_total = nrows - 1
 print('共有{}个商品'.format(items_total))
 
-# 获取除了第一行表头外的所有行
-rows = ws.iter_rows(row_offset=1, max_row=items_total)
-for (sku, name, jd_price, jd_url, tmall_price, tmall_url) in rows:
-    print('({}/{})正在查询:({}){}'.format(items_counting, items_total, sku.value, name.value))
+# 遍历所有行中的这四个字段
+for row in range(1, nrows):
+    # 获得该行所需的单元格
+    t_url_cell = ws.cell(row=row+1, column=t_url_index+1)
+    t_price_cell = ws.cell(row=row+1, column=t_price_index+1)
+    jd_url_cell = ws.cell(row=row+1, column=jd_url_index+1)
+    jd_price_cell = ws.cell(row=row+1, column=jd_price_index+1)
+    sku_cell = ws.cell(row=row+1, column=sku_index+1)
+    name_cell = ws.cell(row=row+1, column=name_index+1)
+    # 打印查询进度信息
+    print('({}/{})正在查询:({}){}'.format(items_counting, items_total, sku_cell.value, name_cell.value))
     items_counting += 1
-    if jd_url.value:
-        jd_price.value = getJdPrice(jd_url.value)
-    if tmall_url.value:
-        tmall_price.value = getTmallPrice(tmall_url.value)
+    # 查询并修改价格
+    if t_url_cell.value:
+        t_price_cell.value = getTmallPrice(t_url_cell.value)
+    if jd_url_cell.value:
+        jd_price_cell.value = getJdPrice(jd_url_cell.value)
+
 # 设置保存路径以及文件名
 path['dirname'] = os.path.dirname(path['source'])
 path['basename'] = os.path.basename(path['source'])
@@ -37,4 +69,4 @@ path['filename'] = now + '已抓取_' + path['basename']
 path['target'] = os.path.join(path['dirname'], path['filename'])
 # print(path)
 wb.save(path['target'])
-print('完成!已保存到原表格相同文件内, {}'.format(path['filename']))
+print('完成!已保存到原表格相同文件内，文件名：{}'.format(path['filename']))
