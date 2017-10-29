@@ -64,7 +64,7 @@ def getTmallPrice(url):
             else:
                 tries_now = 1
                 print('暂时查不到，手动试试吧')
-                return 104
+                return -104
     
 if __name__ == '__main__':
     test_urls = [
