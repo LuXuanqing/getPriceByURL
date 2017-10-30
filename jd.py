@@ -32,18 +32,20 @@ def getJdPrice(url):
     query_url = 'https://p.3.cn/prices/mgets?skuIds=J_' + id
     response = urllib.request.urlopen(query_url)
     if response.status != 200:
-        print(-103)
-        return '发送的HTTP请求收不到返回数据'
+        print('发送的HTTP请求收不到返回数据')
+        return  -103
     jsonStr = response.read().decode('utf-8')
     result = json.loads(jsonStr)
-    # print(result)
-    price = float(result[0]["p"])
-    # print('jd-price: {}'.format(price))
-    if price >=0:
-        return price
-    else:
+    price = result[0].get('p')
+
+    if (not price) or (float(price) <0):
+        #如果price是None或者price是个负数，返回-104错误
         print('商品已下架或查询不到价格')
         return -104
+    else:
+        # print('jd-price: {}'.format(price))
+        return float(price)
+
 
 if __name__ == '__main__':
     urls = [
@@ -54,4 +56,4 @@ if __name__ == '__main__':
         None
     ]
     for url in urls:
-        getJdPrice(url)
+        print(getJdPrice(url))
