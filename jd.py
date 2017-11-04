@@ -50,13 +50,13 @@ def get_price(url):
     try:
         result = get_json(id)
     except AssertionError as e:
-        return e
+        return str(e)
     # 从json中获取价格
     price = None
     try:
         price = result[0]['p']
     except BaseException as e:
-        return '服务器没有返回正确数据'
+        return str(e)
     else:
         price = float(price)
         return price

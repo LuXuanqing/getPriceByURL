@@ -37,16 +37,13 @@ def get_price(url):
     try:
         assert is_url_correct(url), 'url错误'
     except AssertionError as e:
-        return e
-
-    # chrome打开url
-    # driver = webdriver.Chrome(chrome_options=chrome_options)
+        return str(e)
     driver.get(url)
     elems = driver.find_elements_by_class_name('tm-price')
     for elem in elems:
         if elem.text != '':
             price = float(elem.text)
-    # driver.quit()
+    print('tm-price: {}'.format(price))
     return price
 
 
