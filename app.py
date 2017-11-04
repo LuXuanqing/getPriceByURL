@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+from openpyxl.styles import Font, Color, colors
 from tmall import getTmallPrice
 from jd import getJdPrice
 import os.path
@@ -45,6 +46,10 @@ print('共有{}个商品'.format(items_total))
 
 # 存储异常商品所在行
 errs = set()
+
+# 设置异常数据所在单元格样式
+ft = Font(color=colors.RED)
+
 # 遍历所有行中的这四个字段
 for row in range(1, nrows):
     # 获得该行所需的单元格
@@ -61,16 +66,18 @@ for row in range(1, nrows):
     if t_url_cell.value:
         t_price_cell.value = getTmallPrice(t_url_cell.value)
         if t_price_cell.value < 0:
+            t_price_cell.font = ft
             errs.add(row)
     if jd_url_cell.value:
         jd_price_cell.value = getJdPrice(jd_url_cell.value)
         if jd_price_cell.value < 0:
+            jd_price_cell.font = ft
             errs.add(row)
 
 # 设置保存路径以及文件名
 path['dirname'] = os.path.dirname(path['source'])
 path['basename'] = os.path.basename(path['source'])
-now = time.strftime('%H%M%S')
+now = time.strftime('%m%d')
 path['filename'] = now + '已抓取_' + path['basename']
 path['target'] = os.path.join(path['dirname'], path['filename'])
 # print(path)
@@ -102,7 +109,7 @@ if len(errs) > 0:
         for row in err_rows:
             printItem(row)
         print('+++++++++++++++以上商品价格查询有异常，记得检查一下哦+++++++++++++++\n')
-    
+
     key = input('错误代码的相关信息，按回车查看，输入q退出\n')
     if key == 'q':
         quit()
