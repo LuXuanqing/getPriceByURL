@@ -8,8 +8,7 @@ chrome_options.add_experimental_option("prefs", prefs)
 
 # chrome配置-headless
 # chrome_options.add_argument("--headless")
-# chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-
+chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
 # 打开chrome
 driver = webdriver.Chrome(chrome_options=chrome_options)
@@ -43,7 +42,7 @@ def get_price(url):
     for elem in elems:
         if elem.text != '':
             price = float(elem.text)
-    print('tm-price: {}'.format(price))
+    # print('tm-price: {}'.format(price))
     return price
 
 
