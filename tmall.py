@@ -3,6 +3,30 @@ import json
 import re
 import time
 
+
+# def get_id(url):
+#     '''输入天猫商品详情页的url，返回sku的id。
+
+#     url: 应该以'detail.tmall.com/'结尾，并且带有查询参数'id'
+#     '''
+#     # 检查url是否为str类型
+#     if isinstance(url, str):
+#         return None
+#     # 检查url是否符合标格式
+#     reg_url = re.compile('detail\.tmall\.com/(.*)[?&]id=(\d)+')
+#     match_url = reg_url.search(url)
+#     if not match_url:
+#         return None
+#     # 从url截取商品id
+#     reg_id = re.compile('[?&]id=(\d)+')
+#     match_id = reg_id.match(url)
+#     if match_id:
+#         id = match_id.group().split('=')[-1]
+#         return id
+#     else:
+#         return None
+
+
 def getTmallPrice(url):
     '''输入一个String类型的参数（天猫商品的url），返回该商品的价格.
 
@@ -87,7 +111,7 @@ if __name__ == '__main__':
         'https://chaoshi.detail.tmall.com/item.htm?spm=a3204.7933263.0.0.e859a78bSdQn&id=531592711979&rewcatid=50514008',
         'https://chaoshi.detail.tmall.com/item.htm?spm=a220o.7406545.0.0.37b3010cNGtC49&id=534541275468'
     ]
-
+    
     for url in test_urls:
         print(getTmallPrice(url))
         time.sleep(1)
